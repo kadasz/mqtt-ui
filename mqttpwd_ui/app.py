@@ -6,6 +6,7 @@ import jinja2
 import asyncio
 import aiohttp_jinja2
 from aiohttp import web
+from utils import run_process
 from cryptography import fernet
 from aiohttp_session import get_session, session_middleware, setup
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
@@ -19,6 +20,10 @@ async def index(request):
 async def register(request):
     return {'title': NAME}
 
+async def uptime(request):
+    data = await run_process('uptime')
+    return web.Response(text=data)
+
 async def create_app():
     app = web.Application()
     fernet_key = fernet.Fernet.generate_key()
@@ -28,6 +33,7 @@ async def create_app():
         app, loader=jinja2.FileSystemLoader(TEMPLATE_DIR),
         context_processors=[aiohttp_jinja2.request_processor],)
     app.router.add_route('GET', '/', index, name='index')
+    app.router.add_route('GET', '/api/uptime', uptime, name='uptime')
     app.router.add_route('*', '/register', register, name='register')
     return app
 
