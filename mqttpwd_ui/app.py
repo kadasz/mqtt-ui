@@ -9,7 +9,7 @@ from aiohttp import web
 from cryptography import fernet
 from aiohttp_session import get_session, session_middleware, setup
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
-from settings import NAME, TEMPLATE_DIR, STATIC_DIR, BASE_DIR
+from settings import NAME, TEMPLATE_DIR, STATIC_DIR, BASE_DIR, logger, ACCESS_LOG_FORMAT
 
 @aiohttp_jinja2.template('index.html')
 async def index(request):
@@ -34,5 +34,5 @@ async def create_app():
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     app = loop.run_until_complete(create_app())
-    web.run_app(app, host='0.0.0.0', port='8383')
+    web.run_app(app, access_log=logger, access_log_format=ACCESS_LOG_FORMAT, host='0.0.0.0', port='8383')
 
