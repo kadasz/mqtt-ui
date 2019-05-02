@@ -8,6 +8,7 @@ async def run_process(*cmd):
         Execute shell commands
     '''
     proc = await asyncio.create_subprocess_shell(*cmd,
+        executable='/bin/bash',
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE
         )
