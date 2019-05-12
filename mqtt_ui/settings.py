@@ -4,7 +4,7 @@
 import os
 import logging
 
-NAME = 'mqttpwdUI'
+NAME = 'mqttUI'
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
