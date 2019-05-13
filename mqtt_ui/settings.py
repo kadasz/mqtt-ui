@@ -3,12 +3,14 @@
 
 import os
 import logging
+from passlib.apache import HtpasswdFile
 
 NAME = 'mqttUI'
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
+ht = HtpasswdFile(os.path.join(BASE_DIR, 'passwd'))
 
 LOG_FORMAT = "%(asctime)s %(name)s: [%(levelname)s] %(message)s"
 LOG_DATE_FORMAT = "[ %Y-%m-%d %H:%M:%S ]"

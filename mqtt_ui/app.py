@@ -4,37 +4,33 @@
 import base64
 import jinja2
 import asyncio
+from views import *
 import aiohttp_jinja2
 from aiohttp import web
-from utils import run_process
 from cryptography import fernet
-from aiohttp_session import get_session, session_middleware, setup
+from auth import HTAuthorizationPolicy
+from aiohttp_security import SessionIdentityPolicy
+from aiohttp_session import setup as setup_session
+from aiohttp_security import SessionIdentityPolicy
+from aiohttp_security import setup as setup_security
+from aiohttp_session import get_session, session_middleware
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 from settings import NAME, TEMPLATE_DIR, STATIC_DIR, BASE_DIR, logger, ACCESS_LOG_FORMAT
-
-@aiohttp_jinja2.template('index.html')
-async def index(request):
-    return {'title': NAME}
-
-@aiohttp_jinja2.template('register.html')
-async def register(request):
-    return {'title': NAME}
-
-async def uptime(request):
-    data = await run_process('uptime')
-    return web.Response(text=data)
 
 async def create_app():
     app = web.Application()
     fernet_key = fernet.Fernet.generate_key()
     secret_key = base64.urlsafe_b64decode(fernet_key)
-    setup(app, EncryptedCookieStorage(secret_key, max_age=86400))
+    setup_session(app, EncryptedCookieStorage(secret_key, max_age=86400))
     aiohttp_jinja2.setup(
         app, loader=jinja2.FileSystemLoader(TEMPLATE_DIR),
         context_processors=[aiohttp_jinja2.request_processor],)
+    setup_security(app, SessionIdentityPolicy(), HTAuthorizationPolicy())
     app.router.add_route('GET', '/', index, name='index')
     app.router.add_route('GET', '/api/uptime', uptime, name='uptime')
-    app.router.add_route('*', '/register', register, name='register')
+    app.router.add_route('*', '/login', login, name='login')
+    app.router.add_route('*', '/logout', logout, name='logout')
+    app.router.add_static('/static', STATIC_DIR, name='static')
     return app
 
 if __name__ == '__main__':
