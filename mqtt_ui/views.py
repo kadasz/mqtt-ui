@@ -19,10 +19,10 @@ async def validate_login(form):
     if not username in cur_user:
         ht.set_password(username, password)
         ht.save()
-        return dict(user=f'{username}')
+        error = None
     if username in cur_user and not ht.check_password(username, password):
         error = 'Not valid password'
-        return dict(error=error, user=f'{cur_user[0]}' if cur_user else None)
+    return dict(error=error, user=f'{cur_user[0]}' if cur_user else username)
 
 
 def redirect(router, route_name):
@@ -42,7 +42,7 @@ async def index(request):
     else:
         return {'title': NAME,  'username': auth}
 
-async def logout(self, request):
+async def logout(request):
     response = redirect(request.app.router, 'login')
     await forget(request, response)
     return response

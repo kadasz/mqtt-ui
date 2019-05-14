@@ -17,12 +17,34 @@
 <body>
     
     <nav class="navbar navbar-default nav-bgcolor" role="navigation">
-      <a class="navbar-brand" href="/"><span class="re">mqttUI</span></a>
-      <div class="logout-right pull-right">
-        <a class="username" href="{{ url('logout') }}">{{ username }} &nbsp;<i class="fas fa-sign-out-alt"></i></a>
+      <a class="navbar-brand" href="/"><span class="re">{{ title }}</span></a>
+        <div class="pull-right">
+          <li class="nav-item dropdown list-unstyled dmenu">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+              {{ username }} &nbsp; <i class="fas fa-user-cog"></i>
+            </a>
+            <div class="dropdown-menu sm-menu">
+              <a class="dropdown-item" href="#">service1</a>
+              <a class="dropdown-item" href="#">service2</a>
+              <a class="dropdown-item" href="#">service3</a>
+            </div>
+          </li>
       </div>
     </nav>
-
-
+    <script>
+      $(document).ready(function(){
+      $(".dropdown-menu li a").click(function(e){
+        e.preventDefault();
+        $(".dropdown-menu li").removeClass('activeTabLink');
+          var activeAttr = $(this).parent('li').addClass('activeTabLink');
+        });
+      });
+      
+      $('.navbar .dmenu').hover(function () {
+        $(this).find('.sm-menu').first().stop(true, true).slideDown(250);
+          }, function () {
+        $(this).find('.sm-menu').first().stop(true, true).slideUp(250)
+      });
+    </script>
 </body>
 </html>
