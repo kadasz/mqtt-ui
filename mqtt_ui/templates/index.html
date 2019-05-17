@@ -11,13 +11,14 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link type="text/css" href="{{ url('static', filename='style.css') }}" rel="stylesheet" />
+    <link type="image/x-icon" href="{{ url('static', filename='mqttui-96.png') }}" rel="shortcut icon" />
 
     <title> {{ title }} </title>
 </head>
 <body>
     
     <nav class="navbar navbar-default nav-bgcolor" role="navigation">
-      <a class="navbar-brand" href="/"><span class="re">{{ title }}</span></a>
+      <a class="navbar-brand" href="/"><img src="static/mqttui-96.png" alt="mqttUI logo" width="32" height="32">mqtt<span class="ui">UI</span></a>
         <div class="pull-right">
           <li class="nav-item dropdown list-unstyled dmenu">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
