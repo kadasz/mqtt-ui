@@ -29,8 +29,57 @@
               <a class="dropdown-item" href="#">service3</a>
             </div>
           </li>
-      </div>
+        </div>
     </nav>
+    
+    <section class="container py-4">
+      <div class="row">
+        <div class="col-12">
+          <div class="card text-center">
+            <div class="card-header">
+              <ul id="tabs" class="nav nav-tabs card-header-tabs">
+                <li class="nav-item fade active show"><a href="" data-target="#users" data-toggle="tab" class="nav-link medium"><i class="fas fa-users"></i> Users &nbsp;<span class="float-right badge badge-pill badge-secondary">8</span></a></li>
+              </ul>
+            </div>
+              <br>
+            <div id="tabs" class="tab-content">
+              <div id="users" class="tab-pane fade active show">
+
+                <div class="col col-xs-6 text-right">
+                  <button type="button" class="btn btn-xs btn-primary btn-create"><span class="fas fa-user-plus"></span> New user</button>
+                </div>
+
+                <div class="container">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Id.</th>
+                        <th class="w-75">Name</th>
+                        <th class="text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tr>
+                      <td>1</td>
+                      <td>Admin1</td>
+                      <td class="text-center"><a class='btn btn-info btn-xs' href="#"><span class="fas fa-user-edit"></span> Edit</a> <a href="#" class="btn btn-danger btn-xs"><span class="fas fa-user-times"></span> Del</a></td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>Admin2</td>
+                      <td class="text-center"><a class='btn btn-info btn-xs' href="#"><span class="fas fa-user-edit"></span> Edit</a> <a href="#" class="btn btn-danger btn-xs"><span class="fas fa-user-times"></span> Del</a></td>
+                    </tr>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </section>
+
     <script>
       $(document).ready(function(){
       $(".dropdown-menu li a").click(function(e){
