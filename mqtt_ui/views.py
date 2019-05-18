@@ -62,5 +62,9 @@ async def login(request):
             raise response
 
 async def uptime(request):
-    data = await run_process('uptime')
-    return web.Response(text=data)
+    auth = await authorized_userid(request)
+    if not auth:
+        raise redirect(request.app.router, 'login')
+    elif auth:
+        data = await run_process('uptime')
+        return Response(text=data)
