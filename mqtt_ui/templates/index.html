@@ -25,7 +25,7 @@
               {{ username }} &nbsp; <i class="fas fa-user-cog"></i>
             </a>
             <div class="dropdown-menu sm-menu">
-              <a class="dropdown-item" href="#">service1</a>
+              <a class="dropdown-item" data-id="" data-name="change" data-target="#change-admin-password" data-toggle="modal">Change password</a>
               <a class="dropdown-item" href="#">service2</a>
               <a class="dropdown-item" href="#">service3</a>
             </div>
@@ -76,6 +76,34 @@
             </div>
 
 
+          <!-- Start modal for changing admin password -->
+          <div class="modal fade" id="change-admin-password" tabindex="-1" role="dialog" aria-labelledby="change" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="Heading">Change Admin Password</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                     <input type="password" id="password" class="form-control" name="password" onkeyup='check();' placeholder="Password" required>
+                  </div>
+          
+                  <div class="form-group">
+                   <input type="password" id="retype_password" class="form-control" name="password" onkeyup='check();' placeholder="Retype Passowrd" required>
+                  </div>
+                    <span id='password_message'></span>
+                </div>
+                <div class="modal-footer ">
+                  <button type="button" class="btn btn-secondary" style="width: 100%;" data-dismiss="modal"><span class="fas fa-times-circle"></span> Cancel</button>
+                  <button type="button" class="btn btn-warning submit-update" style="width: 100%;" disabled><span class="fas fa-check-circle"></span> Update</button> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End modal for changing admin password -->
+
+
           </div>
         </div>
       </div>
@@ -95,6 +123,43 @@
           }, function () {
         $(this).find('.sm-menu').first().stop(true, true).slideUp(250)
       });
+
+      var check = function() {
+        if (document.getElementById('password').value ==
+          document.getElementById('retype_password').value) {
+          document.getElementById('password_message').style.color = 'green';
+          document.getElementById('password_message').innerHTML = 'Password matching';
+          $(".submit-update").prop('disabled', false);
+        } else {
+          document.getElementById('password_message').style.color = 'red';
+          document.getElementById('password_message').innerHTML = 'Password not matching';
+          $(".submit-update").prop('disabled', true);
+        }
+      };
+
+      $(document).on('click', '.submit-update', function(e) {
+          e.preventDefault();
+          var pwd  = $('#retype_password').val();
+          $(this).closest('.modal').modal('hide');
+          $.ajax({
+            url: "/api/passwd",
+            type: "POST",
+            data: JSON.stringify({"pwd": pwd}),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+              setTimeout(function () {
+                console.log(data)
+                alert('Admin password has changed')
+                }, 350
+              );
+            },
+            error: function(res) {
+              console.log(res);
+                alert(res.statusText);
+            }
+          });
+        });
     </script>
 </body>
 </html>
