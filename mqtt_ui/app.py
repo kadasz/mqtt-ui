@@ -4,6 +4,7 @@
 import base64
 import jinja2
 import asyncio
+import argparse
 from views import *
 import aiohttp_jinja2
 from aiohttp import web
@@ -35,7 +36,18 @@ async def create_app():
     return app
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="mqttUI server start")
+    parser.add_argument('--host', type=str, default='0.0.0.0', help='Set the bind address for mqttUI (default: %(default)s)')
+    parser.add_argument('--port', type=int, default=8383, help='Set listen on a specified port (default: %(default)s)')
+    parser.add_argument('--pwd', type=str, help='Select path to the mosquitto password file')
+    args = parser.parse_args()
+    if not args.pwd:
+        parser.error("--pwd requires. Please specify path to the mosquitto password file")
+        parser.exit()
+    elif args.pwd:
+        pass
     loop = asyncio.get_event_loop()
     app = loop.run_until_complete(create_app())
-    web.run_app(app, access_log=logger, access_log_format=ACCESS_LOG_FORMAT, host='0.0.0.0', port='8383')
+    app['pwd'] = args.pwd
+    web.run_app(app, access_log=logger, access_log_format=ACCESS_LOG_FORMAT, host=args.host, port=args.port)
 
