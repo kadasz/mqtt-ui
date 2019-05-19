@@ -28,6 +28,7 @@ async def create_app():
     setup_security(app, SessionIdentityPolicy(), HTAuthorizationPolicy())
     app.router.add_route('GET', '/', index, name='index')
     app.router.add_route('GET', '/api/uptime', uptime, name='uptime')
+    app.router.add_route('POST', '/api/pwdchange', pwdchange, name='pwdchange')
     app.router.add_route('*', '/login', login, name='login')
     app.router.add_route('*', '/logout', logout, name='logout')
     app.router.add_static('/static', STATIC_DIR, name='static')

@@ -26,8 +26,7 @@
             </a>
             <div class="dropdown-menu sm-menu">
               <a class="dropdown-item" data-id="" data-name="change" data-target="#change-admin-password" data-toggle="modal">Change password</a>
-              <a class="dropdown-item" href="#">service2</a>
-              <a class="dropdown-item" href="#">service3</a>
+              <a class="dropdown-item" href="{{ url('logout') }}">Logout</a>
             </div>
           </li>
         </div>
@@ -86,11 +85,11 @@
                 </div>
                 <div class="modal-body">
                   <div class="form-group">
-                     <input type="password" id="password" class="form-control" name="password" onkeyup='check();' placeholder="Password" required>
+                     <input class="form-control" type="password" id="password" name="password" onkeyup='check();' placeholder="Password" required>
                   </div>
           
                   <div class="form-group">
-                   <input type="password" id="retype_password" class="form-control" name="password" onkeyup='check();' placeholder="Retype Passowrd" required>
+                   <input class="form-control" type="password" id="retype_password" name="password" onkeyup='check();' placeholder="Retype Passowrd" required>
                   </div>
                     <span id='password_message'></span>
                 </div>
@@ -142,7 +141,7 @@
           var pwd  = $('#retype_password').val();
           $(this).closest('.modal').modal('hide');
           $.ajax({
-            url: "/api/passwd",
+            url: "{{ url('pwdchange') }}",
             type: "POST",
             data: JSON.stringify({"pwd": pwd}),
             dataType: "json",
@@ -150,7 +149,7 @@
             success: function (data) {
               setTimeout(function () {
                 console.log(data)
-                alert('Admin password has changed')
+                alert('Admin password has changed. Please logout and sign in again.')
                 }, 350
               );
             },

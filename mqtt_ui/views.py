@@ -68,3 +68,15 @@ async def uptime(request):
     elif auth:
         data = await run_process('uptime')
         return Response(text=data)
+
+async def pwdchange(request):
+    auth = await authorized_userid(request)
+    if not auth:
+        raise redirect(request.app.router, 'login')
+    elif auth :
+        data = await request.json()
+        newpass = data.get('pwd', None)
+        if newpass:
+            ht.set_password("admin", newpass)
+            ht.save()
+            return json_response({'Admin password has changed': 'success'})
