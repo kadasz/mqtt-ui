@@ -40,7 +40,11 @@ async def index(request):
             request.app['register'] = None
             raise redirect(request.app.router, 'login')
     else:
-        return {'title': NAME,  'username': auth}
+        return dict(
+            title=NAME,
+            username=auth,
+            users=await _getUsers(request)
+        )
 
 async def logout(request):
     response = redirect(request.app.router, 'login')
@@ -80,3 +84,8 @@ async def pwdchange(request):
             ht.set_password("admin", newpass)
             ht.save()
             return json_response({'Admin password has changed': 'success'})
+
+async def _getUsers(request):
+    with open(request.app['pwd']) as htpwd:
+        usernames = [line.split(":")[0] for line in htpwd.readlines()]
+    return usernames
