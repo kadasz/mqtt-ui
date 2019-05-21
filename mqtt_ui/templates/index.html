@@ -25,7 +25,7 @@
               {{ username }} &nbsp; <i class="fas fa-user-cog"></i>
             </a>
             <div class="dropdown-menu sm-menu">
-              <a class="dropdown-item" data-id="" data-name="change" data-target="#change-admin-password" data-toggle="modal">Change password</a>
+              <a class="dropdown-item change-passwd" data-id="change-admin" data-name="change">Change password</a>
               <a class="dropdown-item" href="{{ url('logout') }}">Logout</a>
             </div>
           </li>
@@ -53,16 +53,16 @@
                   <table class="table table-striped">
                     <thead>
                       <tr>
-                        <th>Id.</th>
+                        <th>Id</th>
                         <th class="w-75">Name</th>
-                        <th class="text-center">Action</th>
+                        <th class="text-center">Action <span class="fas fa-cog"></span></th>
                       </tr>
                     </thead>
                     {% for user in users %}
                     <tr>
                       <td>{{loop.index}}</td>
                       <td>{{user}}</td>
-                      <td class="text-center"><a class='btn btn-info btn-xs' href="#"><span class="fas fa-user-edit"></span> Edit</a> <a href="#" class="btn btn-danger btn-xs"><span class="fas fa-user-times"></span> Del</a></td>
+                      <td class="text-center"><a class='btn btn-info btn-xs change-passwd' href="#change-user" data-id="change-user"><span class="fas fa-user-edit"></span> Edit</a> <a class="btn btn-danger btn-xs" href="#delete-user" role="button" data-toggle="modal"><span class="fas fa-user-times"></span> Del</a></td>
                     </tr>
                     {% endfor %}
                   </table>
@@ -72,12 +72,12 @@
             </div>
 
 
-          <!-- Start modal for changing admin password -->
-          <div class="modal fade" id="change-admin-password" tabindex="-1" role="dialog" aria-labelledby="change" aria-hidden="true">
+          <!-- Start modal for changing password -->
+          <div class="modal fade" id="change-password" tabindex="-1" role="dialog" aria-labelledby="change" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title" id="Heading">Change Admin Password</h4>
+                  <h4 class="modal-title"></h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                 </div>
                 <div class="modal-body">
@@ -92,13 +92,34 @@
                 </div>
                 <div class="modal-footer ">
                   <button type="button" class="btn btn-secondary" style="width: 100%;" data-dismiss="modal"><span class="fas fa-times-circle"></span> Cancel</button>
-                  <button type="button" class="btn btn-warning submit-update" style="width: 100%;" disabled><span class="fas fa-check-circle"></span> Update</button> 
+                  <button type="button" class="btn btn-success submit-update" style="width: 100%;" disabled><span class="fas fa-user-edit"></span> Update</button> 
                 </div>
               </div>
             </div>
           </div>
-          <!-- End modal for changing admin password -->
+          <!-- End modal for admin password -->
 
+          <!-- Start modal for delete user -->
+          <div class="modal fade small modal-danger" id="delete-user" tabindex="-1" role="dialog" aria-labelledby="change" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title text-center">Delete User Confirmation</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                </div>
+                <div class="modal-body">
+                  </br>
+                  <h5>Are you sure you want to delete the user?</h5>
+                  </br>
+                </div>
+                <div class="modal-footer ">
+                  <button type="button" class="btn btn-secondary" style="width: 100%;" data-dismiss="modal"><span class="fas fa-times-circle"></span> Cancel</button>
+                  <button type="button" class="btn btn-danger submit-delete" style="width: 100%;" ><span class="fas fa-user-times"></span> Delete</button> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End modal for delete user -->
 
           </div>
         </div>
@@ -106,6 +127,29 @@
     </section>
 
     <script>
+      // clear all input and hide password message after close modal
+      $(document).on('hidden.bs.modal', function (e) {
+        $('#password_message').hide();
+        $('.submit-update').prop('disabled', true);
+        $('.modal-body input,.modal-body textarea').each(function(){
+          $(this).val('');
+        });
+      });
+
+      $(document).on('click', '.change-passwd', function(e) {
+        e.preventDefault();
+        $(this).find('form').trigger("reset");
+        var dataID = $(this).data('id');
+        var thismodal = $('#change-password');
+        if (dataID == 'change-admin') {
+            thismodal.find('.modal-title').text('Change admin password');
+            thismodal.modal('show');
+          } else if (dataID == 'change-user') {
+            thismodal.find('.modal-title').text('Change user password');
+            thismodal.modal('show');
+          } 
+      }); 
+
       $(document).ready(function(){
       $(".dropdown-menu li a").click(function(e){
         e.preventDefault();
