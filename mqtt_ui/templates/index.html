@@ -25,8 +25,9 @@
               {{ username }} &nbsp; <i class="fas fa-user-cog"></i>
             </a>
             <div class="dropdown-menu sm-menu">
-              <a class="dropdown-item change-passwd" data-id="change-admin" data-name="change">Change password</a>
-              <a class="dropdown-item" href="{{ url('logout') }}">Logout</a>
+              <a class="dropdown-item change-passwd" data-id="change-admin" data-name="change">change password</a>
+              <a class="dropdown-item" href="{{ url('logout') }}">logout</a>
+              <div class="dropdown-divider"></div>
             </div>
           </li>
         </div>
@@ -159,10 +160,12 @@
       });
       
       $('.navbar .dmenu').hover(function () {
-        $(this).find('.sm-menu').first().stop(true, true).slideDown(250);
-          }, function () {
-        $(this).find('.sm-menu').first().stop(true, true).slideUp(250)
-      });
+          $('.sm-menu', this).stop(true, true).slideDown(350);
+          $(this).addClass('open');
+        }, function () {
+          $('.sm-menu', this).stop(true, true).slideUp(350);
+          $(this).removeClass('open');
+      }); 
 
       var check = function() {
         document.getElementById('password_message').style.visibility = "visible";

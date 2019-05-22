@@ -47,6 +47,7 @@ async def index(request):
         )
 
 async def logout(request):
+    request.app['register'] = None
     response = redirect(request.app.router, 'login')
     await forget(request, response)
     return response
