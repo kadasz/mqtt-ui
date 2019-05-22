@@ -165,6 +165,7 @@
       });
 
       var check = function() {
+        document.getElementById('password_message').style.visibility = "visible";
         if (document.getElementById('password').value ==
           document.getElementById('retype_password').value) {
           document.getElementById('password_message').style.color = 'green';
