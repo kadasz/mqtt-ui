@@ -25,7 +25,7 @@
               {{ username }} &nbsp; <i class="fas fa-user-cog"></i>
             </a>
             <div class="dropdown-menu sm-menu">
-              <a class="dropdown-item change-passwd" data-id="change-admin" data-name="change">change password</a>
+              <a class="dropdown-item change-passwd" data-id="change-admin" data-name="admin">change password</a>
               <a class="dropdown-item" href="{{ url('logout') }}">logout</a>
               <div class="dropdown-divider"></div>
             </div>
@@ -47,7 +47,7 @@
               <div id="users" class="tab-pane fade active show">
 
                 <div class="col col-xs-6 text-right">
-                  <button type="button" class="btn btn-xs btn-primary btn-create"><span class="fas fa-user-plus"></span> New user</button>
+                  <button type="button" class="btn btn-xs btn-primary btn-create create-user" href="#create-user" role="button" data-toggle="modal"><span class="fas fa-user-plus"></span> New user</button>
                 </div>
 
                 <div class="container">
@@ -63,7 +63,7 @@
                     <tr>
                       <td>{{loop.index}}</td>
                       <td>{{user}}</td>
-                      <td class="text-center"><a class='btn btn-info btn-xs change-passwd' href="#change-user" data-id="change-user"><span class="fas fa-user-edit"></span> Edit</a> <a class="btn btn-danger btn-xs" href="#delete-user" role="button" data-toggle="modal"><span class="fas fa-user-times"></span> Del</a></td>
+                      <td class="text-center"><a class='btn btn-info btn-xs change-passwd' href="#change-user" data-id="change-user" data-name="{{user}}"><span class="fas fa-user-edit"></span> Edit</a> <a class="btn btn-danger btn-xs delete-user" href="#delete-user" data-name="{{user}}"><span class="fas fa-user-times"></span> Del</a></td>
                     </tr>
                     {% endfor %}
                   </table>
@@ -73,21 +73,23 @@
             </div>
 
 
-          <!-- Start modal for changing password -->
+          <!-- Start modal for change password -->
           <div class="modal fade" id="change-password" tabindex="-1" role="dialog" aria-labelledby="change" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title"></h4>
+                  <h4 class="modal-title">Change user password</h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                 </div>
                 <div class="modal-body">
+                    <h5>Please enter the new password for <span class="badge badge-success modal-change-user"></span> user</h5>
+                    </br>
                   <div class="form-group">
-                     <input class="form-control" type="password" id="password" name="password" onkeyup='check();' placeholder="Password" required>
+                     <input class="form-control" type="password" id="password" name="password" onkeyup='check();' placeholder="new password" required>
                   </div>
           
                   <div class="form-group">
-                   <input class="form-control" type="password" id="retype_password" name="password" onkeyup='check();' placeholder="Retype Passowrd" required>
+                   <input class="form-control" type="password" id="retype_password" name="password" onkeyup='check();' placeholder="retype new passowrd" required>
                   </div>
                     <span id='password_message'></span>
                 </div>
@@ -98,19 +100,54 @@
               </div>
             </div>
           </div>
-          <!-- End modal for admin password -->
+          <!-- End modal for change password -->
+
+
+          <!-- Start modal for create user -->
+          <div class="modal fade" id="create-user" tabindex="-1" role="dialog" aria-labelledby="create" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Create new user</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                </div>
+                <div class="modal-body">
+                    <h5>Please enter username and password</h5>
+                    </br>
+                  <div class="form-group">
+                     <input class="form-control" type="text" id="user" name="user" placeholder="user name" required>
+                  </div>
+
+                  <div class="form-group">
+                     <input class="form-control" type="password" id="password" name="password" onkeyup='check();' placeholder="password" required>
+                  </div>
+
+                  <div class="form-group">
+                   <input class="form-control" type="password" id="retype_password" name="password" onkeyup='check();' placeholder="retype passowrd" required>
+                  </div>
+                    <span id='password_message'></span>
+                </div>
+                <div class="modal-footer ">
+                  <button type="button" class="btn btn-secondary" style="width: 100%;" data-dismiss="modal"><span class="fas fa-times-circle"></span> Cancel</button>
+                  <button type="button" class="btn btn-primary submit-update" style="width: 100%;" disabled><span class="fas fa-user"></span> Create</button> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End modal for create user -->
+
 
           <!-- Start modal for delete user -->
           <div class="modal fade small modal-danger" id="delete-user" tabindex="-1" role="dialog" aria-labelledby="change" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title text-center">Delete User Confirmation</h4>
+                  <h4 class="modal-title text-center">Confirm delete user</h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                 </div>
                 <div class="modal-body">
                   </br>
-                  <h5>Are you sure you want to delete the user?</h5>
+                  <h5>Are you sure you want to delete <span class="badge badge-danger modal-delete-user"></span> user?</h5>
                   </br>
                 </div>
                 <div class="modal-footer ">
@@ -141,14 +178,23 @@
         e.preventDefault();
         $(this).find('form').trigger("reset");
         var dataID = $(this).data('id');
+        var userID = $(this).data('name');
         var thismodal = $('#change-password');
         if (dataID == 'change-admin') {
-            thismodal.find('.modal-title').text('Change admin password');
+            thismodal.find('.modal-change-user').text(userID);
             thismodal.modal('show');
           } else if (dataID == 'change-user') {
-            thismodal.find('.modal-title').text('Change user password');
+            thismodal.find('.modal-change-user').text(userID);
             thismodal.modal('show');
           } 
+      }); 
+
+      $(document).on('click', '.delete-user', function(e) {
+        e.preventDefault();
+        var userID = $(this).data('name');
+        var thismodal = $('#delete-user');
+        thismodal.find('.modal-delete-user').text(userID);
+        thismodal.modal('show');
       }); 
 
       $(document).ready(function(){
@@ -167,8 +213,8 @@
           $(this).removeClass('open');
       }); 
 
-      var check = function() {
-        document.getElementById('password_message').style.visibility = "visible";
+      var check = function(e) {
+        $('#password_message').show();
         if (document.getElementById('password').value ==
           document.getElementById('retype_password').value) {
           document.getElementById('password_message').style.color = 'green';
