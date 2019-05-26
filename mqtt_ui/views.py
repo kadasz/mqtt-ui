@@ -54,17 +54,21 @@ async def logout(request):
 
 @aiohttp_jinja2.template('login.html')
 async def login(request):
-    if request.method == 'POST':
-        form = await request.post()
-        is_validate = await validate_login(form)
-        if is_validate.get('error'):
-            return {'error': is_validate.get('error')}
-        else:
-            user = is_validate.get('user')
-            response = redirect(request.app.router, 'index')
-            request['user'] = user
-            await remember(request, response, user)
-            raise response
+    auth = await authorized_userid(request)
+    if not auth:
+        raise redirect(request.app.router, 'login')
+    elif auth:
+        if request.method == 'POST':
+            form = await request.post()
+            is_validate = await validate_login(form)
+            if is_validate.get('error'):
+                return {'error': is_validate.get('error')}
+            else:
+                user = is_validate.get('user')
+                response = redirect(request.app.router, 'index')
+                request['user'] = user
+                await remember(request, response, user)
+                raise response
 
 async def uptime(request):
     auth = await authorized_userid(request)
@@ -87,7 +91,10 @@ async def pwdchange(request):
             return json_response({'Admin password has changed': 'success'})
 
 async def ucreate(request):
-    if request.method == 'POST':
+    auth = await authorized_userid(request)
+    if not auth:
+        raise redirect(request.app.router, 'login')
+    elif auth :
         form = await request.json()
         user = form['user']
         passwd = form['pwd']
