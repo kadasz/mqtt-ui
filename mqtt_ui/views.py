@@ -87,7 +87,19 @@ async def pwdchange(request):
             return json_response({'Admin password has changed': 'success'})
 
 async def ucreate(request):
-    return json_response({'status': 'exists'})
+    if request.method == 'POST':
+        form = await request.json()
+        user = form['user']
+        passwd = form['pwd']
+        cur_users = await _getUsers(request)
+        if user in cur_users:
+            return json_response({'status': 'exists'})
+        elif user and passwd:
+            create_user = await run_process(f'mosquitto_passwd -b {request.app["pwd"]} {user} {passwd}')
+            return json_response({'status': 'created'})
+        else:
+            return json_response({'status': 'False'})
+            
 
 async def _getUsers(request):
     with open(request.app['pwd']) as htpwd:

@@ -270,26 +270,28 @@
           e.preventDefault();
           var user  = $('#new_user').val();
           var repwd  = $('#confirm_password').val();
+          var thismodal = $(this).closest('.modal');
           $.ajax({
             url: "{{ url('ucreate') }}",
             type: "POST",
-            data: JSON.stringify({"user", user, "pwd": repwd}),
+            data: JSON.stringify({"user": user, "pwd": repwd}),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-              if (data.status == "True") {
+              if (data.status == "created") {
                 $('#check-passwd-msg').html('User created').css('color', 'green');
                 $('#check-passwd-msg').show();
                   setTimeout(function() {
-                    $(this).closest('.modal').modal('hide');
+                    thismodal.modal('hide');
                     },2000
                   );
+                location.reload();
               } else if (data.status == "exists") {
                 $('#check-passwd-msg').html('User exists! Please enter another user name!').css('color', 'red');
                 $('#check-passwd-msg').show();
               } else {
                 setTimeout(function() {
-                  $(this).closest('.modal').modal('hide');
+                  thismodal.modal('hide');
                   },2000
                 );
                 console.log(data)
