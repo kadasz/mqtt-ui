@@ -86,6 +86,9 @@ async def pwdchange(request):
             ht.save()
             return json_response({'Admin password has changed': 'success'})
 
+async def ucreate(request):
+    return json_response({'status': 'exists'})
+
 async def _getUsers(request):
     with open(request.app['pwd']) as htpwd:
         usernames = [line.split(":")[0] for line in htpwd.readlines()]
