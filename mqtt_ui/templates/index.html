@@ -63,7 +63,7 @@
                     <tr>
                       <td>{{loop.index}}</td>
                       <td>{{user}}</td>
-                      <td class="text-center"><a class='btn btn-info btn-xs change-passwd' href="#change-user" data-id="change-user" data-name="{{user}}"><span class="fas fa-user-edit"></span> Edit</a> <a class="btn btn-danger btn-xs delete-user" href="#delete-user" data-name="{{user}}"><span class="fas fa-user-times"></span> Del</a></td>
+                      <td class="text-center"><a class='btn btn-info btn-xs change-passwd' data-id="change-user" href="#change-user" data-name="{{user}}"><span class="fas fa-user-edit"></span> Edit</a> <a class="btn btn-danger btn-xs delete-user" href="#delete-user" data-name="{{user}}"><span class="fas fa-user-times"></span> Del</a></td>
                     </tr>
                     {% endfor %}
                   </table>
@@ -185,9 +185,11 @@
         var thismodal = $('#change-password');
         if (dataID == 'change-admin') {
             thismodal.find('.modal-change-user').text(userID);
+            thismodal.attr("data-name", userID);
             thismodal.modal('show');
           } else if (dataID == 'change-user') {
             thismodal.find('.modal-change-user').text(userID);
+            thismodal.attr("data-name", userID);
             thismodal.modal('show');
           } 
       }); 
@@ -245,11 +247,13 @@
       $(document).on('click', '.submit-update', function(e) {
           e.preventDefault();
           var pwd  = $('#retype_password').val();
+          var user = $('#change-password').data('name');
+          alert(user);
           $(this).closest('.modal').modal('hide');
           $.ajax({
             url: "{{ url('pwdchange') }}",
             type: "POST",
-            data: JSON.stringify({"pwd": pwd}),
+            data: JSON.stringify({"user": user, "pwd": pwd}),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
@@ -300,7 +304,7 @@
             },
             error: function(res) {
               console.log(res);
-                alert(responseText);
+              alert(res);
             }
           });
         });
