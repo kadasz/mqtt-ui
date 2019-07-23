@@ -31,6 +31,7 @@ async def create_app():
     app.router.add_route('GET', '/api/uptime', uptime, name='uptime')
     app.router.add_route('POST', '/api/pwdchange', pwdchange, name='pwdchange')
     app.router.add_route('POST', '/api/ucreate', ucreate, name='ucreate')
+    app.router.add_route('POST', '/api/udelete', udelete, name='udelete')
     app.router.add_route('*', '/login', login, name='login')
     app.router.add_route('*', '/logout', logout, name='logout')
     app.router.add_static('/static', STATIC_DIR, name='static')

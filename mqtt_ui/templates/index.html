@@ -170,6 +170,8 @@
       $(document).on('hidden.bs.modal', function (e) {
         $('#password_message').hide();
         $('#check-passwd-msg').hide();
+        $(this).find('form').trigger("reset");
+        $('.submit-update').removeAttr('data-name');
         $('.submit-update').prop('disabled', true);
         $('.submit-create').prop('disabled', true);
         $('.modal-body input,.modal-body textarea').each(function(){
@@ -185,11 +187,11 @@
         var thismodal = $('#change-password');
         if (dataID == 'change-admin') {
             thismodal.find('.modal-change-user').text(userID);
-            thismodal.attr("data-name", userID);
+            thismodal.find('.submit-update').attr("data-name", userID);
             thismodal.modal('show');
           } else if (dataID == 'change-user') {
             thismodal.find('.modal-change-user').text(userID);
-            thismodal.attr("data-name", userID);
+            thismodal.find('.submit-update').attr("data-name", userID);
             thismodal.modal('show');
           } 
       }); 
@@ -200,6 +202,7 @@
         var thismodal = $('#delete-user');
         thismodal.find('.modal-delete-user').text(userID);
         thismodal.modal('show');
+        alert(userID)
       }); 
 
       $(document).ready(function(){
@@ -247,21 +250,40 @@
       $(document).on('click', '.submit-update', function(e) {
           e.preventDefault();
           var pwd  = $('#retype_password').val();
-          var user = $('#change-password').data('name');
-          alert(user);
-          $(this).closest('.modal').modal('hide');
+          var uname = $('.submit-update').data('name');
+          var thismodal = $(this).closest('.modal');
+          alert(uname)
           $.ajax({
             url: "{{ url('pwdchange') }}",
             type: "POST",
-            data: JSON.stringify({"user": user, "pwd": pwd}),
+            data: JSON.stringify({"user": uname, "pwd": pwd}),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-              setTimeout(function () {
+              if (data.status_admin) {
+                $('#password_message').html(data.status_admin).css('color', 'green');
+                $('#password_message').show();
+                  setTimeout(function() {
+                    thismodal.modal('hide');
+                    },2000
+                  );
+              } else if (data.status_user) {
+                $('#password_message').html(data.status_user).css('color', 'green');
+                $('#password_message').show();
+                  setTimeout(function() {
+                    thismodal.modal('hide');
+                    },2000
+                  );
+              } else {
+                $('#password_message').html(data.status).css('color', 'green');
+                $('#password_message').show();
+                setTimeout(function() {
+                  thismodal.modal('hide');
+                  },2000
+                );
                 console.log(data)
-                alert('Admin password has changed. Please logout and sign in again.')
-                }, 350
-              );
+                alert('Server error occurred - see JavaScript console in the browser')
+              }
             },
             error: function(res) {
               console.log(res);

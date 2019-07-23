@@ -85,12 +85,12 @@ async def pwdchange(request):
         if user == 'admin' and newpass:
             ht.set_password("admin", newpass)
             ht.save()
-            return json_response({'Admin password has changed': 'success'})
+            return json_response({'status_admin': 'Admin password has changed. Please logout and sign in again'})
         elif user and newpass:
             change_pwd = await run_process(f'mosquitto_passwd -b {request.app["pwd"]} {user} {newpass}')
-            return json_response({'User {user} password has changed': 'success'})
+            return json_response({'status_user': f'User {user} password has updated'})
         else:
-            return json_response({'status': 'False'})
+            return json_response({'status': 'Something went wrong'})
 
 async def ucreate(request):
     auth = await authorized_userid(request)
@@ -108,6 +108,21 @@ async def ucreate(request):
             return json_response({'status': 'created'})
         else:
             return json_response({'status': 'False'})
+
+async def udelete(request):
+    auth = await authorized_userid(request)
+    if not auth:
+        raise redirect(request.app.router, 'login')
+    elif auth :
+        form = await request.json()
+        user = form['user']
+        cur_users = await _getUsers(request)
+        if user in cur_users:
+            delete_user = await run_process(f'mosquitto_passwd -D {request.app["pwd"]} {user}')
+            return json_response({'status': 'deleted'})
+        else:
+            return json_response({'status': 'False'})
+            
             
 
 async def _getUsers(request):
