@@ -5,5 +5,10 @@ __NOTE! This project is experimental simply application as part of python learni
 Current features is:
 - manage the password file
 
+### Current view UI page
+
+![Image](screen1.png)
+
+
 ## License 
 The code in this repository, unless otherwise noted, is MIT licensed. See the LICENSE file for more.
